@@ -27,6 +27,12 @@ class NewPageMacro(WikiMacroBase):
         else:
             data["form"] = "new-project-form"
             data["project"] = "project-name"
+
+        if data["parent"].strip().rstrip("/") == ".":
+            data["parent"] = formatter.req.path_info
+        elif data["parent"].strip().rstrip("/") == "..":
+            data["parent"] = '/'.join(formatter.req.path_info.split("/")[:-1])
+            
         self.log.debug("EXPAND ARGUMENTS: %s " % data)
         req = formatter.req
         template = Chrome(self.env).load_template('newpageform.html',method='xhtml')
